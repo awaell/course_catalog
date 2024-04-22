@@ -22,6 +22,7 @@ The Course Catalog application is developed using PHP native, Bootstrap 5, jQuer
 7. **/view**: Includes the user-facing frontend:
    - **index.php**: The main page for exploring categories and courses.
 8. **api.php**: The main entry point for handling all defined routes, as specified in the `swagger.yaml` file. Example route: `http://YOUR_BASE_URL/api.php/courses`.
+9. **course catalog API collection.json**: The main API collection file which you can use to test the REST API Endpoints 
 
 ### Usage
 Users can access the Course Catalog through the `index.php` file. The API endpoints defined in `api.php` allow fetching courses and categories data dynamically. 
