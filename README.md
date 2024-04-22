@@ -1,2 +1,2 @@
 # course_catalog
- 
+ Course Catalog is a web application that allows users to browse and discover courses across different categories. It provides an intuitive interface for users to explore courses based on their interests.
