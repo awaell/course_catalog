@@ -15,7 +15,7 @@ class DB
     private $pdo;
 
     //Constructor with default parameters
-    public function __construct($host = "localhost", $username = "root", $password = "", $dbname = "course_catalog", $portnumber = "3307")
+    public function __construct($host = "localhost", $username = "u832343216_iahmedwael", $password = "2x-2x=4X", $dbname = "u832343216_course_catalog", $portnumber = "3306")
     {
         $this->host = $host;
         $this->username = $username;
