@@ -18,7 +18,7 @@ require_once('../config/config.php');
     <div class="container-fluid">
         <h1 class="text-center my-4">Course Catalog</h1>
         <div class="row">
-            <div class="col-md-3" id="category-list">
+            <div class="col-md-3 mb-3 mb-md-0" id="category-list">
                 <!-- Category list  -->
             </div>
             <div class="col-md-9">
