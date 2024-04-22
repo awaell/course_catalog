@@ -52,7 +52,7 @@ $(document).ready(function () {
                         // Populate course cards with courses fetched for the selected category
                         $.each(JSON.parse(response), function (index, course) {
                             if(course.main_category_name == categoryName){
-                                var courseCard = $('<div class="col-md-4"></div>');
+                                var courseCard = $('<div class="col-xs-12 col-sm-6 col-md-4 mb-4"></div>');
                                 var card = $('<div class="card"></div>');
                                 var cardImg = $('<img class="card-img-top" src="' + course.preview + '" alt="' + course.name + '">');
                                 var cardBody = $('<div class="card-body"></div>');
