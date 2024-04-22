@@ -87,7 +87,7 @@ $(document).ready(function () {
         success: function (response) {
             var courseCards = $('#course-cards');
             $.each(JSON.parse(response), function (index, course) {
-                var courseCard = $('<div class="col-md-4 mb-4"></div>');
+                var courseCard = $('<div class="col-xs-12 col-md-4 mb-4"></div>');
                 var card = $('<div class="card"></div>');
                 var cardImg = $('<img class="card-img-top" src="' + course.preview + '" alt="' + course.name + '">');
                 var cardBody = $('<div class="card-body"></div>');
