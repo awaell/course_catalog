@@ -9,35 +9,27 @@ $(document).ready(function () {
             var categories = JSON.parse(response);
 
             // Function to generate category links
-            // Function to generate category links
             function generateCategoryLinks(categories, parentElement) {
                 var categoryLinks = $('<ul class="category-list"></ul>');
 
                 $.each(categories, function (index, category) {
-                    var hasSubcategories = category.subcategories && category.subcategories.length > 0;
-                    var hasCourses = category.count_of_courses > 0;
+                    console.log(categories);
+                    var categoryItem = $('<li></li>');
+                    var categoryLink = $('<a href="#" class="category-link" data-name="' + category.name + '" data-id="' + category.id + '">' + category.name + ' (' + category.count_of_courses + ')</a>');
+                    categoryItem.append(categoryLink);
 
                     // Check if the category has subcategories
-                    if (hasSubcategories) {
+                    var subcategories = categories.filter(function (c) {
+                        return c.parent_id === category.id;
+                    });
+
+                    if (subcategories.length > 0) {
                         var subcategoryList = $('<ul class="subcategory-list"></ul>');
-                        generateCategoryLinks(category.subcategories, subcategoryList);
-
-                        var categoryItem = $('<li></li>').append(
-                            $('<a href="#" class="category-link" data-name="' + category.name + '" data-id="' + category.id + '">' + category.name + ' (' + category.count_of_courses + ')</a>'),
-                            subcategoryList
-                        );
-
-                        categoryLinks.append(categoryItem);
-                    } else {
-                        var categoryItem = $('<li></li>').append(
-                            $('<a href="#" class="category-link" data-name="' + category.name + '" data-id="' + category.id + '">' + category.name + ' (' + category.count_of_courses + ')</a>')
-                        );
-
-                        // Check if the category also has courses directly associated with it
-                        if (hasCourses) {
-                            categoryLinks.append(categoryItem);
-                        }
+                        generateCategoryLinks(subcategories, subcategoryList);
+                        categoryItem.append(subcategoryList);
                     }
+
+                    categoryLinks.append(categoryItem);
                 });
 
                 parentElement.append(categoryLinks);
@@ -60,7 +52,7 @@ $(document).ready(function () {
 
                         // Populate course cards with courses fetched for the selected category
                         $.each(JSON.parse(response), function (index, course) {
-                            if (course.main_category_name == categoryName) {
+                            if(course.main_category_name == categoryName){
                                 var courseCard = $('<div class="col-xs-12 col-sm-6 col-md-4 mb-4"></div>');
                                 var card = $('<div class="card"></div>');
                                 var cardImg = $('<img class="card-img-top" src="' + course.preview + '" alt="' + course.name + '">');
@@ -68,7 +60,7 @@ $(document).ready(function () {
                                 var cardTitle = $('<h5 class="card-title"></h5>').text(course.name);
                                 var cardText = $('<p class="card-text"></p>').text(course.description);
                                 var categoryLabel = $('<span class="category-label"></span>').text(course.main_category_name);
-
+    
                                 cardBody.append(cardTitle, cardText);
                                 card.append(cardImg, cardBody, categoryLabel);
                                 courseCard.append(card);
