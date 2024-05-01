@@ -11,8 +11,11 @@ $(document).ready(function () {
             categoryItem.append(categoryLink);
 
             if (category.subcategories && category.subcategories.length > 0) {
+                // Create a new list element for subcategories
                 var subcategoryList = $('<ul class="subcategory-list"></ul>');
-                generateCategoryLinks(category.subcategories, subcategoryList); // Recursively generate subcategory links
+                // Recursively generate subcategory links and append them to the subcategory list
+                generateCategoryLinks(category.subcategories, subcategoryList); 
+                // Append the subcategory list to the current category item
                 categoryItem.append(subcategoryList);
             }
 
@@ -21,6 +24,7 @@ $(document).ready(function () {
 
         parentElement.append(categoryLinks);
     }
+
 
     // Fetch all categories
     $.ajax({
