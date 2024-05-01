@@ -47,11 +47,11 @@ $(document).ready(function () {
 
             // Add click event handler for category links
             $('.category-link').click(function () {
-                var categoryId = $(this).data('id');
+                var categoryName = $(this).data('name');
 
                 // Make an AJAX call to fetch relevant courses for the selected category
                 $.ajax({
-                    url: baseUrl + 'api.php/courses/?category_id=' + categoryId,
+                    url: baseUrl + 'api.php/courses/', // call all courses
                     method: 'GET',
                     success: function (response) {
                         var courseCards = $('#course-cards');
@@ -59,18 +59,20 @@ $(document).ready(function () {
 
                         // Populate course cards with courses fetched for the selected category
                         $.each(JSON.parse(response), function (index, course) {
-                            var courseCard = $('<div class="col-xs-12 col-sm-6 col-md-4 mb-4"></div>');
-                            var card = $('<div class="card"></div>');
-                            var cardImg = $('<img class="card-img-top" src="' + course.image_preview + '" alt="' + course.title + '">');
-                            var cardBody = $('<div class="card-body"></div>');
-                            var cardTitle = $('<h5 class="card-title"></h5>').text(course.title);
-                            var cardText = $('<p class="card-text"></p>').text(course.description);
-                            var categoryLabel = $('<span class="category-label"></span>').text(course.main_category_name);
+                            if (course.main_category_name == categoryName) {
+                                var courseCard = $('<div class="col-xs-12 col-sm-6 col-md-4 mb-4"></div>');
+                                var card = $('<div class="card"></div>');
+                                var cardImg = $('<img class="card-img-top" src="' + course.preview + '" alt="' + course.name + '">');
+                                var cardBody = $('<div class="card-body"></div>');
+                                var cardTitle = $('<h5 class="card-title"></h5>').text(course.name);
+                                var cardText = $('<p class="card-text"></p>').text(course.description);
+                                var categoryLabel = $('<span class="category-label"></span>').text(course.main_category_name);
 
-                            cardBody.append(cardTitle, cardText);
-                            card.append(cardImg, cardBody, categoryLabel);
-                            courseCard.append(card);
-                            courseCards.append(courseCard);
+                                cardBody.append(cardTitle, cardText);
+                                card.append(cardImg, cardBody, categoryLabel);
+                                courseCard.append(card);
+                                courseCards.append(courseCard);
+                            }
                         });
                     },
                     error: function (xhr, status, error) {
