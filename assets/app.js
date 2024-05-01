@@ -11,27 +11,29 @@ $(document).ready(function () {
             // Function to generate category links
             function generateCategoryLinks(categories, parentElement) {
                 var categoryLinks = $('<ul class="category-list"></ul>');
-
+            
                 $.each(categories, function (index, category) {
-                    console.log(categories);
                     var categoryItem = $('<li></li>');
                     var categoryLink = $('<a href="#" class="category-link" data-name="' + category.name + '" data-id="' + category.id + '">' + category.name + ' (' + category.count_of_courses + ')</a>');
                     categoryItem.append(categoryLink);
-
+            
                     // Check if the category has subcategories
                     var subcategories = categories.filter(function (c) {
                         return c.parent_id === category.id;
                     });
-
+            
                     if (subcategories.length > 0) {
                         var subcategoryList = $('<ul class="subcategory-list"></ul>');
                         generateCategoryLinks(subcategories, subcategoryList);
                         categoryItem.append(subcategoryList);
                     }
-
-                    categoryLinks.append(categoryItem);
+            
+                    // Only append the category item if it doesn't have subcategories
+                    if (subcategories.length === 0) {
+                        categoryLinks.append(categoryItem);
+                    }
                 });
-
+            
                 parentElement.append(categoryLinks);
             }
 
