@@ -63,39 +63,22 @@ class Model
 
     public function countCoursesInCategory($categoryId) {
         try {
-            // Construct the SQL query with a recursive CTE to count courses in the category and its subcategories
-            $sql = "
-                WITH RECURSIVE category_tree AS (
-                    SELECT id
-                    FROM categories
-                    WHERE id = :categoryId
-                    UNION ALL
-                    SELECT c.id
-                    FROM categories c
-                    INNER JOIN category_tree ct ON c.parent = ct.id
-                )
-                SELECT COUNT(*) AS total
-                FROM courses
-                WHERE category_id IN (SELECT id FROM category_tree)
-            ";
-    
-            // Prepare and execute the SQL query
+            // Retrieve count of courses in the category and its subcategories
+            $sql = "SELECT COUNT(*) AS total
+                    FROM courses
+                    WHERE category_id = :categoryId 
+                    OR category_id IN (SELECT id FROM categories WHERE parent = :categoryId)";
             $sqlstmt = $this->db->prepare($sql);
             $sqlstmt->bindParam(':categoryId', $categoryId, PDO::PARAM_STR);
             $sqlstmt->execute();
-    
-            // Fetch the result
             $result = $sqlstmt->fetch(PDO::FETCH_ASSOC);
     
-            // Return the total count of courses
             return $result['total'];
         } catch (Exception $e) {
-            // Handle any exceptions
             if ($this->debug) {
                 echo "Error: " . $e->getMessage();
             }
         }
     }
-    
     
 }
