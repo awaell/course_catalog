@@ -1,46 +1,38 @@
 $(document).ready(function () {
     var baseUrl = $('#base_url').val();
-
-    // Function to recursively count courses in a category and its subcategories
-    function countCoursesInCategory(category) {
-        var count = category.count_of_courses;
-        if (category.subcategories && category.subcategories.length > 0) {
-            $.each(category.subcategories, function (index, subcategory) {
-                count += countCoursesInCategory(subcategory); // Recursively count courses in subcategories
-            });
-        }
-        return count;
-    }
-
-    // Function to generate category links
-    function generateCategoryLinks(categories, parentElement) {
-        var categoryLinks = $('<ul class="category-list"></ul>');
-
-        $.each(categories, function (index, category) {
-            var categoryItem = $('<li></li>');
-            var count = countCoursesInCategory(category); // Count courses in the category and its subcategories
-            var categoryLink = $('<a href="#" class="category-link" data-name="' + category.name + '" data-id="' + category.id + '">' + category.name + ' (' + count + ')</a>');
-            categoryItem.append(categoryLink);
-
-            if (category.subcategories && category.subcategories.length > 0) {
-                var subcategoryList = $('<ul class="subcategory-list"></ul>');
-                generateCategoryLinks(category.subcategories, subcategoryList); // Recursively generate subcategory links
-                categoryItem.append(subcategoryList);
-            }
-
-            categoryLinks.append(categoryItem);
-        });
-
-        parentElement.append(categoryLinks);
-    }
-
-    // Fetch all categories
+    // fetch all categories
     $.ajax({
         url: baseUrl + 'api.php/categories',
         method: 'GET',
         success: function (response) {
             var categoryList = $('#category-list');
             var categories = JSON.parse(response);
+
+            // Function to generate category links
+            function generateCategoryLinks(categories, parentElement) {
+                var categoryLinks = $('<ul class="category-list"></ul>');
+
+                $.each(categories, function (index, category) {
+                    var categoryItem = $('<li></li>');
+                    var categoryLink = $('<a href="#" class="category-link" data-name="' + category.name + '" data-id="' + category.id + '">' + category.name + ' (' + category.count_of_courses + ')</a>');
+                    categoryItem.append(categoryLink);
+
+                    // Check if the category has subcategories
+                    var subcategories = categories.filter(function (c) {
+                        return c.parent_id === category.id;
+                    });
+
+                    if (subcategories.length > 0) {
+                        var subcategoryList = $('<ul class="subcategory-list"></ul>');
+                        generateCategoryLinks(subcategories, subcategoryList);
+                        categoryItem.append(subcategoryList);
+                    }
+
+                    categoryLinks.append(categoryItem);
+                });
+
+                parentElement.append(categoryLinks);
+            }
 
             // Generate category links
             generateCategoryLinks(categories, categoryList);
@@ -59,7 +51,7 @@ $(document).ready(function () {
 
                         // Populate course cards with courses fetched for the selected category
                         $.each(JSON.parse(response), function (index, course) {
-                            if (course.main_category_name == categoryName) {
+                            if(course.main_category_name == categoryName){
                                 var courseCard = $('<div class="col-xs-12 col-sm-6 col-md-4 mb-4"></div>');
                                 var card = $('<div class="card"></div>');
                                 var cardImg = $('<img class="card-img-top" src="' + course.preview + '" alt="' + course.name + '">');
@@ -67,12 +59,13 @@ $(document).ready(function () {
                                 var cardTitle = $('<h5 class="card-title"></h5>').text(course.name);
                                 var cardText = $('<p class="card-text"></p>').text(course.description);
                                 var categoryLabel = $('<span class="category-label"></span>').text(course.main_category_name);
-
+    
                                 cardBody.append(cardTitle, cardText);
                                 card.append(cardImg, cardBody, categoryLabel);
                                 courseCard.append(card);
                                 courseCards.append(courseCard);
                             }
+
                         });
                     },
                     error: function (xhr, status, error) {
@@ -81,8 +74,11 @@ $(document).ready(function () {
                     }
                 });
             });
+
         }
     });
+
+
 
     // Fetch all courses (initially all courses)
     $.ajax({
