@@ -63,7 +63,7 @@ class Model
 
     public function countCoursesInCategory($categoryId) {
         try {
-            // Retrieve all courses in the category and its subcategories
+            // Retrieve count of courses in the category and its subcategories
             $sql = "SELECT COUNT(*) AS total FROM courses WHERE category_id = :categoryId OR category_id IN (SELECT id FROM categories WHERE parent = :categoryId)";
             $sqlstmt = $this->db->prepare($sql);
             $sqlstmt->bindParam(':categoryId', $categoryId, PDO::PARAM_STR);
@@ -77,4 +77,5 @@ class Model
             }
         }
     }
+    
 }
